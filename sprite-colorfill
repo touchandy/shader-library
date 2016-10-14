@@ -1,7 +1,7 @@
 Shader "Custom/Vertex And Fragment Shaders/2D Sprites/Color-Fill Sprite Shader"{
 
 	Properties{
-
+	
 		[Header(Main Visuals)]
 		_MainTex("Sprite", 2D) = "white" {}
 
@@ -13,8 +13,7 @@ Shader "Custom/Vertex And Fragment Shaders/2D Sprites/Color-Fill Sprite Shader"{
 
 	SubShader{
 
-		Tags
-		{ 
+		Tags{ 
 			"Queue"="Transparent" 
 			"IgnoreProjector"="True" 
 			"RenderType"="Transparent" 
