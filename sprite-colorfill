@@ -1,0 +1,77 @@
+Shader "Custom/Vertex And Fragment Shaders/2D Sprites/Color-Fill Sprite Shader"{
+
+	Properties{
+
+		[Header(Main Visuals)]
+		_MainTex("Sprite", 2D) = "white" {}
+
+		[Header(Color Fill Visuals)]
+		_Fill_Color("Fill Color", Color) = (1,1,1,1)
+		_Fill_Amount("Fill Amount", Range(0.0, 1.0)) = 0.0
+
+	}
+
+	SubShader{
+
+		Tags
+		{ 
+			"Queue"="Transparent" 
+			"IgnoreProjector"="True" 
+			"RenderType"="Transparent" 
+			"PreviewType"="Plane"
+			"CanUseSpriteAtlas"="True"
+		}
+
+		Cull Off
+		ZWrite Off
+		Lighting Off
+		Blend One OneMinusSrcAlpha
+
+		Pass{
+
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+
+			sampler2D _MainTex;
+			fixed4 _Fill_Color;
+			fixed _Fill_Amount;
+
+			struct appdata{
+				float4 vertex : POSITION;
+				float4 tint : COLOR;
+				float2 uv0 : TEXCOORD0;
+			};
+
+			struct v2f{
+				float4 vertex : SV_POSITION;
+				fixed4 tint : COLOR;
+				float2 uv0 : TEXCOORD0;
+			};
+
+			v2f vert (appdata IN){
+
+				v2f OUT;
+
+				OUT.vertex = mul(UNITY_MATRIX_MVP, IN.vertex);
+				OUT.texcoord = IN.texcoord;
+				OUT.tint = IN.tint;
+
+				return OUT;
+
+			}
+
+			fixed4 frag(v2f IN) : SV_TARGET{
+
+				fixed4 endColor = tex2D(_MainTex, IN.texcoord) * IN.tint;
+				endColor.rgb = lerp(endColor, _FillColor, _FillAmount);
+				endColor.rgb *=endColor.a;
+
+				return endColor;
+
+			}
+			
+			ENDCG
+		}
+	}
+}
